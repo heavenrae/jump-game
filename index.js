@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     let speed = 3
     let upTimerId
     let downTimerId
+    let startPoint = 150
 
 
 
@@ -87,14 +88,28 @@ document.addEventListener('DOMContentLoaded', () =>{
             if (doodlerBottomSpace <=0){
                 gameOver()
             }
-        }
-        )
+        }, 20)
+        
 
 
     }
     fall()
 
- 
+    function jump () {
+        clearInterval(downTimerId)
+        isJumping = true
+        upTimerId = setInterval(()=> {
+            doodlerBottomSpace += 20
+            doodler.style.bottom = doodlerBottomSpace + 'px'
+                if (doodlerBottomSpace > startPoint + 80){
+                    fall()
+                    isJumping = false
+                }
+        }, 30 )
+    }
+
+
+
 
     function gameOver(){
         isGameOver = true 
@@ -111,6 +126,7 @@ document.addEventListener('DOMContentLoaded', () =>{
             createPlatforms()
             createDoodler()
             setInterval(movePlatforms, 30) 
+            jump ()
         }
     }
     
