@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     let isGameOver = false
     let doodlerLeftSpace = 50
     let doodlerBottomSpace = 150
+    let score = 0
 
 
     class Platform {
@@ -32,25 +33,61 @@ document.addEventListener('DOMContentLoaded', () =>{
             let newPlatBottom = 100 + index * platGap
             let newPlatform = new Platform(newPlatBottom)
             platforms.push(newPlatform)
-            console.log(platforms);
+            console.log(platforms)
             
         }
     }
-    createPlatforms()
+
+    function movePlatforms() {
+        if (doodlerBottomSpace > 80) {
+            platforms.forEach(platform => {
+              platform.bottom -= 4
+              let visual = platform.visual
+              visual.style.bottom = platform.bottom + 'px'
+    
+              if(platform.bottom < 10) {
+                let firstPlatform = platforms[0].visual
+                firstPlatform.classList.remove('platform')
+                platforms.shift()
+                console.log(platforms)
+                score++
+                var newPlatform = new Platform(600)
+                platforms.push(newPlatform)
+              }
+          }) 
+        }
+        
+      }
+
 
 
     function createDoodler () {
         grid.appendChild(doodler)
         doodler.classList.add('doodler')
+        doodlerLeftSpace = platforms[0].left
+        doodler.style.left = doodlerLeftSpace +'px'
         doodler.style.bottom = doodlerBottomSpace + 'px'
-        
-   
-        //testing
-
-
-
     }
-    createDoodler()
 
+ 
+
+    function gameOver(){
+        isGameOver = true 
+        while (grid.firstChild) {
+            console.log('remove')
+            grid.removeChild(grid.firstChild)
+        }
+        
+    }
+
+    function start() {
+        if (!isGameOver) {
+            createPlatforms()
+            createDoodler()
+            setInterval(movePlatforms, 30) 
+        }
+    }
+    
+    start()
 
 })
