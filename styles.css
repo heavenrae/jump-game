@@ -1,8 +1,22 @@
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    height: 100vh;
+}
+
+
+
+
 .grid {
 
     width: 400px;
     height: 600px;
-    background-image: url("background.png");
+    background-image: url("pizzabackgrounf.webp");
+    background-size: cover;
+    background-position: 15% 0;
+    background-repeat: no-repeat;
     position: relative;
     font-size: 100px;
     text-align: center;
@@ -12,14 +26,30 @@
 
 .doodler {
     width: 87px;
-    height: 85px;
-    background-image: url('doodler-guy.png');
+    height: 95px;
+    background-image: url('minispiderman.png');
+    background-size: cover;  
+    background-repeat: no-repeat;
     position: absolute;
 }
 
+
 .platform {
     width: 85px;
-    height: 15px;
-    background-image: url('platform.png');
+    height: 20px;
+    background-image: url('miniplatform2.png');
     position: absolute;
+}
+
+#score-display {
+    position: absolute;
+    font-size: 30px;
+    top: 10px; 
+     margin-left: 35%;
+    color: rgb(0, 0, 0); 
+    font-family: 'Courier New', Courier, monospace; 
+    background-color: aliceblue;
+    border-style: groove;
+    font-display: bold;
+    z-index: 2; 
 }
