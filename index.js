@@ -2,14 +2,14 @@
 document.addEventListener('DOMContentLoaded', () =>{
 
     const grid = document.querySelector('.grid')
-    const doodler = document.createElement('div')
+    const spooder = document.createElement('div')
    let platformCount = 5
    let platforms = []
 
-    //changeables 
+    // variables for managing game state and spooderman position
     let isGameOver = false
-    let doodlerLeftSpace = 50
-    let doodlerBottomSpace = 150
+    let spooderLeftSpace = 50
+    let spooderBottomSpace = 140
     let score = 0
     let isJumping = true;
     let isGoingLeft = false;
@@ -21,10 +21,10 @@ document.addEventListener('DOMContentLoaded', () =>{
     let startPoint = 150
 
 
-
+    // Platform class for creating platform objects
     class Platform {
         constructor(newPlatBottom){
-            this.left = Math.random() * 315  //this calculation so it doesn't move out side of the grid 
+            this.left = Math.random() * 315  // randomize platform left position within grid
             this.bottom = newPlatBottom
             this.isScored = false;
             this.visual = document.createElement('div')
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     function createPlatforms(){
         for (let index = 0; index < platformCount; index++) {
             let platGap = 600 / platformCount
-            let newPlatBottom = 100 + index * platGap
+            let newPlatBottom = 90 + index * platGap
             let newPlatform = new Platform(newPlatBottom)
             platforms.push(newPlatform)
             
@@ -48,15 +48,15 @@ document.addEventListener('DOMContentLoaded', () =>{
     }
 
     function movePlatforms() {
-        if (doodlerBottomSpace > 80) {
+        if (spooderBottomSpace > 60) {
             platforms.forEach(platform => {
-              platform.bottom -= 4
+              platform.bottom -= 3
               let visual = platform.visual
               visual.style.bottom = platform.bottom + 'px'
     
               if (platform.bottom < 10) {
                 if (!platform.isScored) {
-                    platform.isScored = true; // Add this line
+                    platform.isScored = true; 
                     score++;
                     updateScoreDisplay();
                 }
@@ -75,33 +75,33 @@ document.addEventListener('DOMContentLoaded', () =>{
 
 
 
-    function createDoodler () {
-        grid.appendChild(doodler)
-        doodler.classList.add('doodler')
-        doodlerLeftSpace = platforms[0].left
-        doodler.style.left = doodlerLeftSpace +'px'
-        doodler.style.bottom = doodlerBottomSpace + 'px'
+    function createspooder () {
+        grid.appendChild(spooder)
+        spooder.classList.add('spooder')
+        spooderLeftSpace = platforms[0].left
+        spooder.style.left = spooderLeftSpace +'px'
+        spooder.style.bottom = spooderBottomSpace + 'px'
     }
 
-
+    // handles spooderman falling
     function fall () {
         isJumping = false
         clearTimeout(upTimerId)
         downTimerId = setInterval(function() {
-            doodlerBottomSpace -= 3
-            doodler.style.bottom = doodlerBottomSpace + 'px'
-            if (doodlerBottomSpace <= 0){
+            spooderBottomSpace -= 3
+            spooder.style.bottom = spooderBottomSpace + 'px'
+            if (spooderBottomSpace <= 0){
                 gameOver()
             }
             platforms.forEach (platform => {
                 if (
-                    (doodlerBottomSpace >= platform.bottom) &&
-                    (doodlerBottomSpace <= (platform.bottom + 15)) &&
-                    ((doodlerLeftSpace + 60) >=platform.left) && 
-                    (doodlerLeftSpace <= (platform.left + 85)) &&
+                    (spooderBottomSpace >= platform.bottom) &&
+                    (spooderBottomSpace <= (platform.bottom + 15)) &&
+                    ((spooderLeftSpace + 60) >=platform.left) && 
+                    (spooderLeftSpace <= (platform.left + 85)) &&
                     !isJumping
                 ) {
-                    startPoint = doodlerBottomSpace
+                    startPoint = spooderBottomSpace
                     jump()
                     console.log('startPoint', startPoint)
                     isJumping = true 
@@ -111,16 +111,16 @@ document.addEventListener('DOMContentLoaded', () =>{
     }
     fall()
 
-  
+      // function to handle spooderman jumping
     function jump() {
         clearInterval(downTimerId)
         isJumping = true
         upTimerId = setInterval(function () {
-        doodlerBottomSpace += 5;
-          doodler.style.bottom = doodlerBottomSpace + 'px'
-          console.log('2',doodlerBottomSpace)
+        spooderBottomSpace += 7;
+          spooder.style.bottom = spooderBottomSpace + 'px'
+          console.log('2',spooderBottomSpace)
           console.log('s',startPoint)
-          if (doodlerBottomSpace > (startPoint + 100)) {
+          if (spooderBottomSpace > (startPoint + 100)) {
             fall()
             isJumping = false
           }
@@ -134,10 +134,10 @@ document.addEventListener('DOMContentLoaded', () =>{
         }
             isGoingLeft = true
             leftTimerId = setInterval (() => {
-                if (doodlerLeftSpace >= 0) {
+                if (spooderLeftSpace >= 0) {
                     console.log('going left')
-                    doodlerLeftSpace -= 5
-                    doodler.style.left = doodlerLeftSpace +'px'
+                    spooderLeftSpace -= 5
+                    spooder.style.left = spooderLeftSpace +'px'
                 } else moveRight()
             }, 20 )
         }
@@ -150,13 +150,15 @@ document.addEventListener('DOMContentLoaded', () =>{
         }
         isGoingRight = true
         rightTimerId = setInterval(function() {
-                if (doodlerLeftSpace <= 313){
+                if (spooderLeftSpace <= 313){
                     console.log('going right ')
-                    doodlerLeftSpace += 5
-                    doodler.style.left = doodlerLeftSpace + 'px';
+                    spooderLeftSpace += 5
+                    spooder.style.left = spooderLeftSpace + 'px';
                 } else moveLeft()
         }, 20);
       }
+
+     // wont allow  horizontal movement
 
       function moveStraight() {
         isGoingLeft = false
@@ -165,8 +167,9 @@ document.addEventListener('DOMContentLoaded', () =>{
         clearInterval(rightTimerId)
       }
 
+          // function to handle keyboard controls
         function control(e) {
-            doodler.style.bottom = doodlerBottomSpace + 'px'
+            spooder.style.bottom = spooderBottomSpace + 'px'
             if (e.key === 'ArrowLeft') {
                 moveLeft()
             } else if (e.key === 'ArrowRight') {
@@ -176,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () =>{
             }
         }
 
-
+        //how to end the game
         function gameOver() {
             isGameOver = true;
             clearInterval(upTimerId);
@@ -188,18 +191,18 @@ document.addEventListener('DOMContentLoaded', () =>{
                 platform.visual.classList.remove('platform');
             });
         
-            doodler.classList.remove('doodler');
+            spooder.classList.remove('spooder');
         
         
             updateScoreDisplay();
         }
 
    
-
+// start the game
     function start() {
         if (!isGameOver) {
             createPlatforms()
-            createDoodler()
+            createspooder()
             setInterval(movePlatforms, 30) 
             jump(startPoint)
             document.addEventListener('keyup', control)
@@ -208,6 +211,8 @@ document.addEventListener('DOMContentLoaded', () =>{
 
         }
     }
+
+        // update the score logic
      function updateScoreDisplay() {
         const scoreDisplay = document.getElementById('score-display');
         if (scoreDisplay) {
